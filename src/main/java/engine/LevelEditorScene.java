@@ -18,11 +18,11 @@ public class LevelEditorScene extends Scene {
     private int vertexID, fragmentID, shaderProgram;
 
     private float[] vertexArray = {
-             //position                 //color
-             100.5f, 0.5f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, //Bottom right
-             0.5f,   100.5f, 0.0f,       0.0f, 1.0f, 0.0f, 1.0f, //Top Left
-             100.5f, 100.5f, 0.0f,       0.0f, 0.0f, 1.0f, 1.0f, //Top Right
-             0.5f,   0.5f, 0.0f,         1.0f, 1.0f, 0.0f, 1.0f, //Bottom Left
+             //position                 //color                         //UV Coordinates
+             100f,   0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f,           1, 0, //Bottom right
+               0f, 100f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f,           0, 1, //Top Left
+             100f, 100f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f,           1, 1, //Top Right
+               0f,   0f, 0.0f,         1.0f, 1.0f, 0.0f, 1.0f,           0, 0, //Bottom Left
     };
 
     //Must be Counter-clockwise
@@ -69,13 +69,16 @@ public class LevelEditorScene extends Scene {
         //Add vertex attributes
         int positionSize = 3;
         int colorSize = 4;
-        int floatSizeBytes = 4;
-        int vertexSizeBytes = (positionSize + colorSize) * floatSizeBytes;
+        int uvSize = 2;
+        int vertexSizeBytes = (positionSize + colorSize + uvSize) * Float.BYTES;
         glVertexAttribPointer(0, positionSize, GL_FLOAT, false, vertexSizeBytes, 0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionSize * floatSizeBytes);
+        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionSize * Float.BYTES);
         glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, uvSize, GL_FLOAT, false, vertexSizeBytes, (positionSize + colorSize) * Float.BYTES);
+        glEnableVertexAttribArray(2);
     }
 
     @Override
