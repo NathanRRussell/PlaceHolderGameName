@@ -16,7 +16,6 @@ public class Window {
     private long glfwWindow;
 
     public float r, g, b, a;
-    private boolean fadeToBlack = false;
 
     private static Window window = null;
 
