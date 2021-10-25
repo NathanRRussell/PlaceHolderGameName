@@ -37,12 +37,16 @@ public class LevelEditorScene extends Scene {
     private Shader defaultShader;
     private Texture testTexture;
 
+    GameObject testObj;
+
     public LevelEditorScene() {
 
     }
 
     @Override
     public void init() {
+        this.testObj = new GameObject("test object");
+
         this.camera = new Camera(new Vector2f());
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compileAndLink();
