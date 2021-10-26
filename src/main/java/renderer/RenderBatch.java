@@ -109,7 +109,7 @@ public class RenderBatch {
         shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
         shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
         for(int i=0;i<textures.size();i++) {
-            glActiveTexture(GL_TEXTURE + i + 1);
+            glActiveTexture(GL_TEXTURE0 + i + 1);
             textures.get(i).bind();
         }
         shader.uploadIntArray("uTextures", texSlots);
@@ -205,5 +205,13 @@ public class RenderBatch {
 
     public boolean hasRoom() {
         return this.hasRoom;
+    }
+
+    public boolean hasTextureRoom() {
+        return this.textures.size() < 8;
+    }
+
+    public boolean hasTexture(Texture tex) {
+        return this.textures.contains(tex);
     }
 }
