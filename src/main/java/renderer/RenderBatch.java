@@ -4,7 +4,6 @@ import components.SpriteRenderer;
 import engine.Window;
 import org.joml.Vector4f;
 import util.AssetPool;
-import util.Time;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
