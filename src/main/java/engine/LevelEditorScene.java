@@ -1,14 +1,14 @@
 package engine;
 
-import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
 import org.joml.Vector2f;
 import util.AssetPool;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 public class LevelEditorScene extends Scene {
+
+    private GameObject obj1;
+    private Spritesheet sprites;
 
     public LevelEditorScene() {
 
@@ -20,34 +20,48 @@ public class LevelEditorScene extends Scene {
 
         this.camera = new Camera(new Vector2f(-250, 0));
 
-        Spritesheet sprites = AssetPool.getSpritesheet("assets/images/spritesheet2.png");
+        //POKEMON
+        //GEN 1-3
+        //sprites = AssetPool.getSpritesheet("assets/images/spritesheet2.png");
+        //GEN 1-4
+        sprites = AssetPool.getSpritesheet("assets/images/spritesheet3.png");
+        //MARIO
+        //sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
 
-        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
+        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
         obj1.addComponent(new SpriteRenderer(sprites.getSprite(251)));
         this.addGameObjectToScene(obj1);
 
         GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)));
-        obj2.addComponent(new SpriteRenderer(sprites.getSprite(256)));
+        obj2.addComponent(new SpriteRenderer(sprites.getSprite(492)));
         this.addGameObjectToScene(obj2);
     }
 
     private void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
 
-        AssetPool.addSpritesheet("assets/images/spritesheet2.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet2.png"), 64, 64, 386, 0));
+        //POKEMON
+        //GEN 1-3
+        //AssetPool.addSpritesheet("assets/images/spritesheet2.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet2.png"), 64, 64, 385, 0));
+        //GEN 1-4
+        AssetPool.addSpritesheet("assets/images/spritesheet3.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet3.png"), 80, 80, 492, 0));
+        //MARIO
+        //AssetPool.addSpritesheet("assets/images/spritesheet.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"), 16, 16, 26, 0));
     }
 
+    private int spriteIndex = 251;
+    private float spriteFlipTime = 0.5f;
+    private float spriteFlipTimeLeft = 0.0f;
     @Override
     public void update(float dt) {
-        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
-            camera.position.x += 100f * dt;
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
-            camera.position.x -= 100f * dt;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
-            camera.position.y += 100f * dt;
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
-            camera.position.y -= 100f * dt;
+        spriteFlipTimeLeft -= dt;
+        if(spriteFlipTimeLeft <= 0) {
+            spriteFlipTimeLeft = spriteFlipTime;
+            spriteIndex++;
+            if(spriteIndex == 254) {
+                spriteIndex = 251;
+            }
+            obj1.getComponent(SpriteRenderer.class).setSprite(sprites.getSprite(spriteIndex));
         }
 
         for (GameObject go : this.gameObjects) {
