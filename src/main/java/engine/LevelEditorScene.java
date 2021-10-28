@@ -24,16 +24,16 @@ public class LevelEditorScene extends Scene {
         //GEN 1-3
         //sprites = AssetPool.getSpritesheet("assets/images/spritesheet2.png");
         //GEN 1-4
-        sprites = AssetPool.getSpritesheet("assets/images/spritesheet3.png");
+        //sprites = AssetPool.getSpritesheet("assets/images/spritesheet3.png");
         //MARIO
-        //sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
+        sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
 
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
-        obj1.addComponent(new SpriteRenderer(sprites.getSprite(251)));
+        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 4);
+        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
         this.addGameObjectToScene(obj1);
 
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)));
-        obj2.addComponent(new SpriteRenderer(sprites.getSprite(492)));
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 2);
+        obj2.addComponent(new SpriteRenderer(sprites.getSprite(7)));
         this.addGameObjectToScene(obj2);
     }
 
@@ -44,25 +44,13 @@ public class LevelEditorScene extends Scene {
         //GEN 1-3
         //AssetPool.addSpritesheet("assets/images/spritesheet2.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet2.png"), 64, 64, 385, 0));
         //GEN 1-4
-        AssetPool.addSpritesheet("assets/images/spritesheet3.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet3.png"), 80, 80, 492, 0));
+        //AssetPool.addSpritesheet("assets/images/spritesheet3.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet3.png"), 80, 80, 492, 0));
         //MARIO
-        //AssetPool.addSpritesheet("assets/images/spritesheet.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"), 16, 16, 26, 0));
+        AssetPool.addSpritesheet("assets/images/spritesheet.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"), 16, 16, 26, 0));
     }
 
-    private int spriteIndex = 251;
-    private float spriteFlipTime = 0.5f;
-    private float spriteFlipTimeLeft = 0.0f;
     @Override
     public void update(float dt) {
-        spriteFlipTimeLeft -= dt;
-        if(spriteFlipTimeLeft <= 0) {
-            spriteFlipTimeLeft = spriteFlipTime;
-            spriteIndex++;
-            if(spriteIndex == 254) {
-                spriteIndex = 251;
-            }
-            obj1.getComponent(SpriteRenderer.class).setSprite(sprites.getSprite(spriteIndex));
-        }
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);
