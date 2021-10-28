@@ -2,7 +2,9 @@ package engine;
 
 import components.SpriteRenderer;
 import components.Spritesheet;
+import imgui.ImGui;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import util.AssetPool;
 
 public class LevelEditorScene extends Scene {
@@ -29,8 +31,9 @@ public class LevelEditorScene extends Scene {
         sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
 
         obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 4);
-        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        obj1.addComponent(new SpriteRenderer(new Vector4f(1, 0, 0, 1)));
         this.addGameObjectToScene(obj1);
+        this.activeGameObject = obj1;
 
         GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 2);
         obj2.addComponent(new SpriteRenderer(sprites.getSprite(7)));
@@ -57,5 +60,12 @@ public class LevelEditorScene extends Scene {
         }
 
         this.renderer.render();
+    }
+
+    @Override
+    public void imgui() {
+        ImGui.begin("Test window");
+        ImGui.text("Some random text");
+        ImGui.end();
     }
 }
