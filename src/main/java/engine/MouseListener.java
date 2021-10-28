@@ -20,9 +20,10 @@ public class MouseListener {
     }
 
     public static MouseListener get() {
-        if(MouseListener.instance == null) {
+        if (MouseListener.instance == null) {
             MouseListener.instance = new MouseListener();
         }
+
         return MouseListener.instance;
     }
 
@@ -35,12 +36,12 @@ public class MouseListener {
     }
 
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
-        if(action == GLFW_PRESS) {
-            if(button < get().mouseButtonPressed.length) {
+        if (action == GLFW_PRESS) {
+            if (button < get().mouseButtonPressed.length) {
                 get().mouseButtonPressed[button] = true;
             }
-        } else if(action == GLFW_RELEASE) {
-            if(button < get().mouseButtonPressed.length) {
+        } else if (action == GLFW_RELEASE) {
+            if (button < get().mouseButtonPressed.length) {
                 get().mouseButtonPressed[button] = false;
                 get().isDragging = false;
             }
@@ -88,7 +89,7 @@ public class MouseListener {
     }
 
     public static boolean mouseButtonDown(int button) {
-        if(button < get().mouseButtonPressed.length) {
+        if (button < get().mouseButtonPressed.length) {
             return get().mouseButtonPressed[button];
         } else {
             return false;

@@ -30,7 +30,7 @@ public abstract class Scene {
     }
 
     public void start() {
-        for(GameObject go : gameObjects) {
+        for (GameObject go : gameObjects) {
             go.start();
             this.renderer.add(go);
         }
@@ -38,7 +38,7 @@ public abstract class Scene {
     }
 
     public void addGameObjectToScene(GameObject go) {
-        if(!isRunning) {
+        if (!isRunning) {
             gameObjects.add(go);
         } else {
             gameObjects.add(go);
@@ -54,7 +54,7 @@ public abstract class Scene {
     }
 
     public void sceneImgui() {
-        if(activeGameObject != null) {
+        if (activeGameObject != null) {
             ImGui.begin("Inspector");
             activeGameObject.imgui();
             ImGui.end();
@@ -89,16 +89,17 @@ public abstract class Scene {
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
                 .create();
+
         String inFile = "";
         try {
             inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if(!inFile.equals("")) {
+        if (!inFile.equals("")) {
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for(int i=0;i<objs.length;i++) {
+            for (int i=0; i < objs.length; i++) {
                 addGameObjectToScene(objs[i]);
             }
             this.levelLoaded = true;

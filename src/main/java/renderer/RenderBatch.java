@@ -10,13 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-public class RenderBatch implements Comparable<RenderBatch>  {
-
+public class RenderBatch implements Comparable<RenderBatch> {
+    // Vertex
+    // ======
+    // Pos               Color                         tex coords     tex id
+    // float, float,     float, float, float, float    float, float   float
     private final int POS_SIZE = 2;
     private final int COLOR_SIZE = 4;
     private final int TEX_COORDS_SIZE = 2;
@@ -47,6 +51,7 @@ public class RenderBatch implements Comparable<RenderBatch>  {
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
 
+        // 4 vertices quads
         vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
 
         this.numSprites = 0;
@@ -55,22 +60,22 @@ public class RenderBatch implements Comparable<RenderBatch>  {
     }
 
     public void start() {
-        //Generate and bind Vertex Array Object
+        // Generate and bind a Vertex Array Object
         vaoID = glGenVertexArrays();
         glBindVertexArray(vaoID);
 
-        //Allocate Space for Vertices
+        // Allocate space for vertices
         vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferData(GL_ARRAY_BUFFER, vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
 
-        //Create and Upload Indices Buffer
+        // Create and upload indices buffer
         int eboID = glGenBuffers();
         int[] indices = generateIndices();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-        //Enable Buffer Attribute Pointers
+        // Enable the buffer attribute pointers
         glVertexAttribPointer(0, POS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POS_OFFSET);
         glEnableVertexAttribArray(0);
 
@@ -85,43 +90,45 @@ public class RenderBatch implements Comparable<RenderBatch>  {
     }
 
     public void addSprite(SpriteRenderer spr) {
+        // Get index and add renderObject
         int index = this.numSprites;
         this.sprites[index] = spr;
         this.numSprites++;
 
-        if(spr.getTexture() != null) {
-            if(!textures.contains(spr.getTexture())) {
+        if (spr.getTexture() != null) {
+            if (!textures.contains(spr.getTexture())) {
                 textures.add(spr.getTexture());
             }
         }
 
+        // Add properties to local vertices array
         loadVertexProperties(index);
 
-        if(numSprites >= this.maxBatchSize) {
+        if (numSprites >= this.maxBatchSize) {
             this.hasRoom = false;
         }
     }
 
     public void render() {
-        boolean rebuffData = false;
-        for(int i=0;i<numSprites;i++) {
+        boolean rebufferData = false;
+        for (int i=0; i < numSprites; i++) {
             SpriteRenderer spr = sprites[i];
-            if(spr.isDirty()) {
+            if (spr.isDirty()) {
                 loadVertexProperties(i);
                 spr.setClean();
-                rebuffData = true;
+                rebufferData = true;
             }
         }
-        if(rebuffData) {
+        if (rebufferData) {
             glBindBuffer(GL_ARRAY_BUFFER, vboID);
             glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
         }
 
-        //Use Shader
+        // Use shader
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
         shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
-        for(int i=0;i<textures.size();i++) {
+        for (int i=0; i < textures.size(); i++) {
             glActiveTexture(GL_TEXTURE0 + i + 1);
             textures.get(i).bind();
         }
@@ -137,67 +144,71 @@ public class RenderBatch implements Comparable<RenderBatch>  {
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
 
-        for(int i=0;i<textures.size();i++) {
+        for (int i=0; i < textures.size(); i++) {
             textures.get(i).unbind();
         }
-
         shader.detach();
     }
 
     private void loadVertexProperties(int index) {
         SpriteRenderer sprite = this.sprites[index];
 
+        // Find offset within array (4 vertices per sprite)
         int offset = index * 4 * VERTEX_SIZE;
+
         Vector4f color = sprite.getColor();
         Vector2f[] texCoords = sprite.getTexCoords();
 
-        int texID = 0;
-        if(sprite.getTexture() != null) {
+        int texId = 0;
+        if (sprite.getTexture() != null) {
             for (int i = 0; i < textures.size(); i++) {
-                if(textures.get(i) == sprite.getTexture()) {
-                    texID = i + 1;
+                if (textures.get(i) == sprite.getTexture()) {
+                    texId = i + 1;
                     break;
                 }
             }
         }
 
+        // Add vertices with the appropriate properties
         float xAdd = 1.0f;
         float yAdd = 1.0f;
-        for(int i=0;i<4;i++) {
-            if(i == 1) {
+        for (int i=0; i < 4; i++) {
+            if (i == 1) {
                 yAdd = 0.0f;
-            } else if(i == 2) {
+            } else if (i == 2) {
                 xAdd = 0.0f;
-            } else if(i == 3) {
+            } else if (i == 3) {
                 yAdd = 1.0f;
             }
 
-            //Load Position
+            // Load position
             vertices[offset] = sprite.gameObject.transform.position.x + (xAdd * sprite.gameObject.transform.scale.x);
             vertices[offset + 1] = sprite.gameObject.transform.position.y + (yAdd * sprite.gameObject.transform.scale.y);
 
-            //Load Color
+            // Load color
             vertices[offset + 2] = color.x;
             vertices[offset + 3] = color.y;
             vertices[offset + 4] = color.z;
             vertices[offset + 5] = color.w;
 
-            //Load Texture Coords
+            // Load texture coordinates
             vertices[offset + 6] = texCoords[i].x;
             vertices[offset + 7] = texCoords[i].y;
 
-            //Load Texture ID
-            vertices[offset + 8] = texID;
+            // Load texture id
+            vertices[offset + 8] = texId;
 
             offset += VERTEX_SIZE;
         }
     }
 
     private int[] generateIndices() {
+        // 6 indices per quad (3 per triangle)
         int[] elements = new int[6 * maxBatchSize];
-        for(int i=0;i<maxBatchSize;i++) {
+        for (int i=0; i < maxBatchSize; i++) {
             loadElementIndices(elements, i);
         }
+
         return elements;
     }
 
@@ -205,12 +216,13 @@ public class RenderBatch implements Comparable<RenderBatch>  {
         int offsetArrayIndex = 6 * index;
         int offset = 4 * index;
 
-        //Triangle 1
+        // 3, 2, 0, 0, 2, 1        7, 6, 4, 4, 6, 5
+        // Triangle 1
         elements[offsetArrayIndex] = offset + 3;
         elements[offsetArrayIndex + 1] = offset + 2;
         elements[offsetArrayIndex + 2] = offset + 0;
 
-        //Triangle 2
+        // Triangle 2
         elements[offsetArrayIndex + 3] = offset + 0;
         elements[offsetArrayIndex + 4] = offset + 2;
         elements[offsetArrayIndex + 5] = offset + 1;
@@ -234,6 +246,6 @@ public class RenderBatch implements Comparable<RenderBatch>  {
 
     @Override
     public int compareTo(RenderBatch o) {
-        return Integer.compare(this.zIndex, o.zIndex);
+        return Integer.compare(this.zIndex, o.zIndex());
     }
 }

@@ -13,14 +13,15 @@ public class Spritesheet {
 
     public Spritesheet(Texture texture, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
         this.sprites = new ArrayList<>();
+
         this.texture = texture;
         int currentX = 0;
         int currentY = texture.getHeight() - spriteHeight;
-        for(int i=0;i<numSprites;i++) {
-            float topY = (currentY + spriteHeight)/(float)texture.getHeight();
-            float rightX = (currentX + spriteWidth)/(float)texture.getWidth();
-            float leftX = currentX/(float)texture.getWidth();
-            float bottomY = currentY/(float)texture.getHeight();
+        for (int i=0; i < numSprites; i++) {
+            float topY = (currentY + spriteHeight) / (float)texture.getHeight();
+            float rightX = (currentX + spriteWidth) / (float)texture.getWidth();
+            float leftX = currentX / (float)texture.getWidth();
+            float bottomY = currentY / (float)texture.getHeight();
 
             Vector2f[] texCoords = {
                     new Vector2f(rightX, topY),
@@ -34,7 +35,7 @@ public class Spritesheet {
             this.sprites.add(sprite);
 
             currentX += spriteWidth + spacing;
-            if(currentX >= texture.getWidth()) {
+            if (currentX >= texture.getWidth()) {
                 currentX = 0;
                 currentY -= spriteHeight + spacing;
             }

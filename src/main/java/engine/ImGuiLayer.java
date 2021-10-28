@@ -10,7 +10,6 @@ import imgui.enums.ImGuiMouseCursor;
 import imgui.gl3.ImGuiImplGl3;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 
 public class ImGuiLayer {
 
@@ -154,7 +153,7 @@ public class ImGuiLayer {
 
         // Fonts merge example
         fontConfig.setPixelSnapH(true);
-        fontAtlas.addFontFromFileTTF("assets/fonts/segoeui.ttf", 25, fontConfig);
+        fontAtlas.addFontFromFileTTF("assets/fonts/segoeui.ttf", 32, fontConfig);
 
         fontConfig.destroy(); // After all fonts were added we don't need this config more
 
@@ -169,7 +168,7 @@ public class ImGuiLayer {
     }
 
     public void update(float dt, Scene currentScene) {
-        startFrame((float) dt);
+        startFrame(dt);
 
         // Any Dear ImGui code SHOULD go between ImGui.newFrame()/ImGui.render() methods
         ImGui.newFrame();

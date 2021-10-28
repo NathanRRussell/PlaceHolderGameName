@@ -6,9 +6,9 @@
         "type": "components.SpriteRenderer",
         "properties": {
           "color": {
-            "x": 1.0,
-            "y": 0.0,
-            "z": 0.0,
+            "x": 0.69948184,
+            "y": 0.11960052,
+            "z": 0.11960052,
             "w": 1.0
           },
           "sprite": {

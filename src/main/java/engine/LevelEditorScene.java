@@ -2,18 +2,23 @@ package engine;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import components.Rigidbody;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
 import imgui.ImGui;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import util.AssetPool;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class LevelEditorScene extends Scene {
 
     private GameObject obj1;
     private Spritesheet sprites;
+    SpriteRenderer obj1Sprite;
 
     public LevelEditorScene() {
 
@@ -23,26 +28,24 @@ public class LevelEditorScene extends Scene {
     public void init() {
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
-        if(levelLoaded) {
+        if (levelLoaded) {
+            this.activeGameObject = gameObjects.get(0);
             return;
         }
 
-        //POKEMON
-        //GEN 1-3
-        //sprites = AssetPool.getSpritesheet("assets/images/spritesheet2.png");
-        //GEN 1-4
-        //sprites = AssetPool.getSpritesheet("assets/images/spritesheet3.png");
-        //MARIO
         sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
 
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 200), new Vector2f(256, 256)), 4);
-        SpriteRenderer obj1Sprite = new SpriteRenderer();
+        obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 100),
+                new Vector2f(256, 256)), 2);
+        obj1Sprite = new SpriteRenderer();
         obj1Sprite.setColor(new Vector4f(1, 0, 0, 1));
         obj1.addComponent(obj1Sprite);
+        obj1.addComponent(new Rigidbody());
         this.addGameObjectToScene(obj1);
         this.activeGameObject = obj1;
 
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 2);
+        GameObject obj2 = new GameObject("Object 2",
+                new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 3);
         SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
         Sprite obj2Sprite = new Sprite();
         obj2Sprite.setTexture(AssetPool.getTexture("assets/images/blendImage2.png"));
@@ -54,13 +57,11 @@ public class LevelEditorScene extends Scene {
     private void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
 
-        //POKEMON
-        //GEN 1-3
-        //AssetPool.addSpritesheet("assets/images/spritesheet2.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet2.png"), 64, 64, 385, 0));
-        //GEN 1-4
-        //AssetPool.addSpritesheet("assets/images/spritesheet3.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet3.png"), 80, 80, 492, 0));
-        //MARIO
-        AssetPool.addSpritesheet("assets/images/spritesheet.png", new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"), 16, 16, 26, 0));
+        // TODO: FIX TEXTURE SAVE SYSTEM TO USE PATH INSTEAD OF ID
+        AssetPool.addSpritesheet("assets/images/spritesheet.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),
+                        16, 16, 26, 0));
+        AssetPool.getTexture("assets/images/blendImage2.png");
     }
 
     @Override
