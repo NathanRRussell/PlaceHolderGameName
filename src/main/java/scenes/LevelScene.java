@@ -1,4 +1,7 @@
-package engine;
+package scenes;
+
+import engine.Window;
+import scenes.Scene;
 
 public class LevelScene extends Scene {
     public LevelScene() {
