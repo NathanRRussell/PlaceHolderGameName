@@ -1,6 +1,6 @@
 package components;
 
-import jade.Component;
+import engine.Component;
 
 import java.awt.font.FontRenderContext;
 
