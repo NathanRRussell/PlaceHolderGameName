@@ -1,4 +1,4 @@
-package engine;
+package jade;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;

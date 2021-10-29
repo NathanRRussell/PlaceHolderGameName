@@ -7,11 +7,11 @@ public class Sprite {
 
     private Texture texture = null;
     private Vector2f[] texCoords = {
-            new Vector2f(1, 1),
-            new Vector2f(1, 0),
-            new Vector2f(0, 0),
-            new Vector2f(0, 1)
-    };
+                new Vector2f(1, 1),
+                new Vector2f(1, 0),
+                new Vector2f(0, 0),
+                new Vector2f(0, 1)
+        };
 
 //    public Sprite(Texture texture) {
 //        this.texture = texture;

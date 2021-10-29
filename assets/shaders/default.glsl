@@ -17,6 +17,7 @@ void main()
     fColor = aColor;
     fTexCoords = aTexCoords;
     fTexId = aTexId;
+
     gl_Position = uProjection * uView * vec4(aPos, 1.0);
 }
 
@@ -33,7 +34,7 @@ out vec4 color;
 
 void main()
 {
-    if(fTexId > 0) {
+    if (fTexId > 0) {
         int id = int(fTexId);
         color = fColor * texture(uTextures[id], fTexCoords);
         //color = vec4(fTexCoords, 0, 1);

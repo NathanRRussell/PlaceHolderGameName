@@ -1,4 +1,4 @@
-package engine;
+package jade;
 
 import imgui.ImGui;
 import org.joml.Vector3f;

@@ -1,8 +1,8 @@
 package components;
 
 import imgui.ImGui;
-import engine.Component;
-import engine.Transform;
+import jade.Component;
+import jade.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import renderer.Texture;
